@@ -1,0 +1,74 @@
+services:
+  # --- Servicio 1: PostgreSQL ---
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_agenda
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=agenda_user
+      - POSTGRES_PASSWORD=AgendaPass123!
+      - POSTGRES_DB=agenda_db
+      - TZ=UTC
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agenda_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - backend
+
+  # --- Servicio 2: MongoDB ---
+  mongo_db:
+    image: mongo:latest
+    container_name: mongo_agenda
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=agenda_user
+      - MONGO_INITDB_ROOT_PASSWORD=AgendaPass123!
+      - TZ=UTC
+    volumes:
+      - mongo_data:/data/db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - backend
+
+  # --- Servicio 3: Redis ---
+  redis_db:
+    image: redis/redis-stack:latest
+    container_name: redis_agenda
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 20s
+    networks:
+      - backend
+
+# Volúmenes para persistencia de datos
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
+
+# Red interna dedicada para los servicios de base de datos / cache
+networks:
+  backend:
+    driver: bridge
