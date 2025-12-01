@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
-from ..models import User, Department  # Import models
+from ..models import User, Department  # Importar los modelos
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 

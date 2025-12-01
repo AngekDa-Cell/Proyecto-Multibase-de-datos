@@ -17,3 +17,11 @@ class Department(Base):
     name = Column(String, index=True)
     location = Column(String)
     is_active = Column(Boolean, default=True)
+
+# Role model
+class Role(Base):
+    __tablename__ = "roles"
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
+    description = Column(String)
+    is_active = Column(Boolean, default=True)
