@@ -5,9 +5,9 @@ from pydantic import BaseModel
 import json
 
 # Importaciones locales
-from db_postgres import get_db, UserDB
-from db_mongo import contacts_collection, contact_helper
-from db_redis import redis_client
+from app.db_postgres import get_db, UserDB
+from app.db_mongo import contacts_collection, contact_helper
+from app.db_redis import redis_client
 from bson import ObjectId
 
 app = FastAPI(title="Agenda Multibase API")
