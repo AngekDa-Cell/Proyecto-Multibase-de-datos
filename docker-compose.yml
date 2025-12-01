@@ -62,17 +62,6 @@ services:
     networks:
       - backend
 
-# Volúmenes para persistencia de datos
-volumes:
-  postgres_data:
-  mongo_data:
-  redis_data:
-
-# Red interna dedicada para los servicios de base de datos / cache
-networks:
-  backend:
-    driver: bridge
-
   # --- Servicio 4: API Python FastAPI ---
   api_app:
     build: .
@@ -91,3 +80,14 @@ networks:
       - redis_db
     networks:
       - backend
+
+# Volúmenes para persistencia de datos
+volumes:
+  postgres_data:
+  mongo_data:
+  redis_data:
+
+# Red interna dedicada para los servicios de base de datos / cache
+networks:
+  backend:
+    driver: bridge
