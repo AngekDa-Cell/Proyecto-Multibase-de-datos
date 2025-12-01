@@ -73,21 +73,21 @@ networks:
   backend:
     driver: bridge
 
-    # --- Servicio 4: API Python FastAPI ---
-api_app:
-  build: .
-  container_name: api_agenda
-  ports:
-    - "8000:8000"
-  volumes:
-    - .:/app
-  environment:
-    - DATABASE_URL=postgresql://agenda_user:AgendaPass123!@postgres_db:5432/agenda_db
-    - MONGO_URL=mongodb://agenda_user:AgendaPass123!@mongo_db:27017
-    - REDIS_HOST=redis_db
-  depends_on:
-    - postgres_db
-    - mongo_db
-    - redis_db
-  networks:
-    - backend
+  # --- Servicio 4: API Python FastAPI ---
+  api_app:
+    build: .
+    container_name: api_agenda
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - DATABASE_URL=postgresql://agenda_user:AgendaPass123!@postgres_db:5432/agenda_db
+      - MONGO_URL=mongodb://agenda_user:AgendaPass123!@mongo_db:27017
+      - REDIS_HOST=redis_db
+    depends_on:
+      - postgres_db
+      - mongo_db
+      - redis_db
+    networks:
+      - backend
