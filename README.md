@@ -74,7 +74,7 @@ cd "Tu Ruta del Repositorio"
 
 Ejecuta el siguiente comando para construir las imágenes y levantar todos los contenedores (bases de datos y API):
 ```bash
-docker-compose up --build
+docker compose up --build -d
 ```
 
 Este comando:
@@ -90,9 +90,9 @@ Este comando:
 Una vez que todos los contenedores estén ejecutándose, verifica que todo funcione correctamente:
 
 1. **Verifica los contenedores en ejecución**:
-   ```bash
-   docker-compose ps
-   ```
+  ```bash
+  docker compose ps
+  ```
    Deberías ver 4 contenedores: `postgres_agenda`, `mongo_agenda`, `redis_agenda` y `api_agenda`.
 
 2. **Accede a la API**:
@@ -109,13 +109,40 @@ Una vez que todos los contenedores estén ejecutándose, verifica que todo funci
 
 Para detener todos los servicios:
 ```bash
-docker-compose down
+docker compose down
 ```
 
 Para detener y eliminar volúmenes (borrar datos persistentes):
 ```bash
-docker-compose down -v
+docker compose down -v
 ```
+
+## Validación Automática (Prueba Script)
+
+Inclui un script de PowerShell que prueba automáticamente todos los endpoints de la API (creación, actualización y borrado lógico) sobre PostgreSQL, MongoDB y Redis, y muestra los resultados en la terminal.
+
+### Ejecutar el script
+
+Con los contenedores levantados, ejecuta:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "scripts/smoke_tests.ps1"
+```
+
+Opcionalmente, puedes apuntar a otra URL estableciendo `API_BASE_URL`:
+
+```powershell
+$env:API_BASE_URL = "http://localhost:8000"; powershell -ExecutionPolicy Bypass -File "scripts/smoke_tests.ps1"
+```
+
+### Qué valida
+- `GET /docs` carga correctamente.
+- PostgreSQL: `users`, `departments`, `roles` (POST/PATCH/DELETE con datos únicos por ejecución para evitar colisiones).
+- MongoDB: `contacts`, `events` (POST/PATCH/DELETE).
+- Redis: `config`, `sessions` (POST/PATCH/DELETE con claves únicas).
+- Verificación posterior a borrados (soft delete) mediante `GET`.
+
+Si algún endpoint falla por duplicados, el script usa valores únicos (timestamp) o salta de forma segura y continúa con la validación.
 
 ## Estructura del Proyecto
 
