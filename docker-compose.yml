@@ -75,9 +75,12 @@ services:
       - MONGO_URL=mongodb://agenda_user:AgendaPass123!@mongo_db:27017
       - REDIS_HOST=redis_db
     depends_on:
-      - postgres_db
-      - mongo_db
-      - redis_db
+      postgres_db:
+        condition: service_healthy
+      mongo_db:
+        condition: service_started
+      redis_db:
+        condition: service_healthy
     networks:
       - backend
 
